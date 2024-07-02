@@ -96,22 +96,9 @@ func main() {
 
 func loadPermit(ztmClient *ztm.Client, user string) (*ztm.Permit, error) {
 	permfile := fmt.Sprintf("perms/%s.json", user)
-	if _, statErr := os.Stat(permfile); statErr == nil {
-		file, fileErr := os.Open(permfile)
-		if fileErr != nil {
-			return nil, fileErr
-		}
-		defer file.Close()
 
-		bytes, readErr := io.ReadAll(file)
-		if readErr != nil {
-			return nil, readErr
-		}
-		perm := new(ztm.Permit)
-		if err := json.Unmarshal(bytes, perm); err != nil {
-			return nil, err
-		}
-		return perm, nil
+	if permit, err := ztmClient.Agent().LoadPermit(permfile); err == nil {
+		return permit, nil
 	}
 
 	ztmClient.Ca().Evict(user)

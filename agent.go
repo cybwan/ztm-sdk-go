@@ -1,22 +1,25 @@
 package ztm_go_sdk
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 )
 
 // NewAgentClient creates an Agent Client
 func NewAgentClient(agentServerAddr string) *AgentClient {
 	return &AgentClient{
-		NewRestClient(agentServerAddr),
+		RestClient: NewRestClient(agentServerAddr),
 	}
 }
 
 // NewAgentClientWithTransport creates an Agent Client with Transport
 func NewAgentClientWithTransport(agentServerAddr string, transport *http.Transport) *AgentClient {
 	return &AgentClient{
-		NewRestClientWithTransport(agentServerAddr, transport),
+		RestClient: NewRestClientWithTransport(agentServerAddr, transport),
 	}
 }
 
@@ -310,4 +313,25 @@ func (c *AgentClient) DeleteEndpointPort(meshName, endpointUuid string, protocol
 	}
 
 	return nil
+}
+
+func (c *AgentClient) LoadPermit(permfile string) (*Permit, error) {
+	if _, statErr := os.Stat(permfile); statErr != nil {
+		return nil, statErr
+	}
+	file, fileErr := os.Open(permfile)
+	if fileErr != nil {
+		return nil, fileErr
+	}
+	defer file.Close()
+
+	bytes, readErr := io.ReadAll(file)
+	if readErr != nil {
+		return nil, readErr
+	}
+	perm := new(Permit)
+	if err := json.Unmarshal(bytes, perm); err != nil {
+		return nil, err
+	}
+	return perm, nil
 }
