@@ -6,7 +6,21 @@ import (
 	"net/http"
 )
 
-func (c *AgentClient) listMeshes() ([]*Mesh, error) {
+// NewAgentClient creates an Agent Client
+func NewAgentClient(agentServerAddr string) *AgentClient {
+	return &AgentClient{
+		NewRestClient(agentServerAddr),
+	}
+}
+
+// NewAgentClientWithTransport creates an Agent Client with Transport
+func NewAgentClientWithTransport(agentServerAddr string, transport *http.Transport) *AgentClient {
+	return &AgentClient{
+		NewRestClientWithTransport(agentServerAddr, transport),
+	}
+}
+
+func (c *AgentClient) ListMeshes() ([]*Mesh, error) {
 	resp, err := c.httpClient.R().
 		SetResult([]*Mesh{}).
 		Get(fmt.Sprintf("%s", "meshes"))
@@ -24,7 +38,7 @@ func (c *AgentClient) listMeshes() ([]*Mesh, error) {
 	return *meshes, nil
 }
 
-func (c *AgentClient) getMesh(meshName string) (*Mesh, error) {
+func (c *AgentClient) GetMesh(meshName string) (*Mesh, error) {
 	resp, err := c.httpClient.R().
 		SetResult(&Mesh{}).
 		Get(fmt.Sprintf("%s/%s", "meshes", meshName))
@@ -42,7 +56,7 @@ func (c *AgentClient) getMesh(meshName string) (*Mesh, error) {
 	return mesh, nil
 }
 
-func (c *AgentClient) join(meshName, endpointName string, perm *Permit) error {
+func (c *AgentClient) Join(meshName, endpointName string, perm *Permit) error {
 	perm.Agent.EndpointName = endpointName
 	resp, err := c.httpClient.R().
 		SetBody(perm).
@@ -59,7 +73,7 @@ func (c *AgentClient) join(meshName, endpointName string, perm *Permit) error {
 	return nil
 }
 
-func (c *AgentClient) leave(meshName string) error {
+func (c *AgentClient) Leave(meshName string) error {
 	resp, err := c.httpClient.R().
 		Delete(fmt.Sprintf("%s/%s", "meshes", meshName))
 
@@ -74,7 +88,7 @@ func (c *AgentClient) leave(meshName string) error {
 	return nil
 }
 
-func (c *AgentClient) listMeshEndpoints(meshName string) ([]*MeshEndpoint, error) {
+func (c *AgentClient) ListMeshEndpoints(meshName string) ([]*MeshEndpoint, error) {
 	resp, err := c.httpClient.R().
 		SetResult([]*MeshEndpoint{}).
 		Get(fmt.Sprintf("%s/%s/%s", "meshes", meshName, "endpoints"))
@@ -92,7 +106,7 @@ func (c *AgentClient) listMeshEndpoints(meshName string) ([]*MeshEndpoint, error
 	return *meshEndpoints, nil
 }
 
-func (c *AgentClient) getMeshEndpoint(meshName, endpointUuid string) (*MeshEndpoint, error) {
+func (c *AgentClient) GetMeshEndpoint(meshName, endpointUuid string) (*MeshEndpoint, error) {
 	resp, err := c.httpClient.R().
 		SetResult(MeshEndpoint{}).
 		Get(fmt.Sprintf("%s/%s/%s/%s", "meshes", meshName, "endpoints", endpointUuid))
@@ -110,7 +124,7 @@ func (c *AgentClient) getMeshEndpoint(meshName, endpointUuid string) (*MeshEndpo
 	return meshEndpoint, nil
 }
 
-func (c *AgentClient) getMeshEndpointLogs(meshName, endpointUuid string) ([]*Log, error) {
+func (c *AgentClient) GetMeshEndpointLogs(meshName, endpointUuid string) ([]*Log, error) {
 	resp, err := c.httpClient.R().
 		SetResult([]*Log{}).
 		Get(fmt.Sprintf("%s/%s/%s/%s/%s", "meshes", meshName, "endpoints", endpointUuid, "log"))
@@ -128,7 +142,7 @@ func (c *AgentClient) getMeshEndpointLogs(meshName, endpointUuid string) ([]*Log
 	return *logs, nil
 }
 
-func (c *AgentClient) listMeshServices(meshName string) ([]*MeshService, error) {
+func (c *AgentClient) ListMeshServices(meshName string) ([]*MeshService, error) {
 	resp, err := c.httpClient.R().
 		SetResult([]*MeshService{}).
 		Get(fmt.Sprintf("%s/%s/%s", "meshes", meshName, "services"))
@@ -146,7 +160,7 @@ func (c *AgentClient) listMeshServices(meshName string) ([]*MeshService, error) 
 	return *meshServices, nil
 }
 
-func (c *AgentClient) getMeshService(meshName string, protocol MeshProtocol, serviceName string) (*MeshService, error) {
+func (c *AgentClient) GetMeshService(meshName string, protocol MeshProtocol, serviceName string) (*MeshService, error) {
 	resp, err := c.httpClient.R().
 		SetResult(MeshService{}).
 		Get(fmt.Sprintf("%s/%s/%s/%s/%s", "meshes", meshName, "services", protocol, serviceName))
@@ -164,7 +178,7 @@ func (c *AgentClient) getMeshService(meshName string, protocol MeshProtocol, ser
 	return meshService, nil
 }
 
-func (c *AgentClient) listEndpointServices(meshName, endpointUuid string) ([]*MeshService, error) {
+func (c *AgentClient) ListEndpointServices(meshName, endpointUuid string) ([]*MeshService, error) {
 	resp, err := c.httpClient.R().
 		SetResult([]*MeshService{}).
 		Get(fmt.Sprintf("%s/%s/%s/%s/%s", "meshes", meshName, "endpoints", endpointUuid, "services"))
@@ -182,7 +196,7 @@ func (c *AgentClient) listEndpointServices(meshName, endpointUuid string) ([]*Me
 	return *meshServices, nil
 }
 
-func (c *AgentClient) getEndpointService(meshName, endpointUuid string, protocol MeshProtocol, serviceName string) (*MeshService, error) {
+func (c *AgentClient) GetEndpointService(meshName, endpointUuid string, protocol MeshProtocol, serviceName string) (*MeshService, error) {
 	resp, err := c.httpClient.R().
 		SetResult(MeshService{}).
 		Get(fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s", "meshes", meshName, "endpoints", endpointUuid, "services", protocol, serviceName))
@@ -200,9 +214,9 @@ func (c *AgentClient) getEndpointService(meshName, endpointUuid string, protocol
 	return meshService, nil
 }
 
-func (c *AgentClient) createEndpointService(meshName, endpointUuid string, protocol MeshProtocol, serviceName string, serverAddr MeshServerAddr) error {
+func (c *AgentClient) CreateEndpointService(meshName, endpointUuid string, protocol MeshProtocol, serviceName, host string, port uint16) error {
 	resp, err := c.httpClient.R().
-		SetBody(serverAddr).
+		SetBody(MeshServerAddr{Host: host, Port: port}).
 		Post(fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s", "meshes", meshName, "endpoints", endpointUuid, "services", protocol, serviceName))
 
 	if err != nil {
@@ -216,7 +230,7 @@ func (c *AgentClient) createEndpointService(meshName, endpointUuid string, proto
 	return nil
 }
 
-func (c *AgentClient) deleteEndpointService(meshName, endpointUuid string, protocol MeshProtocol, serviceName string) error {
+func (c *AgentClient) DeleteEndpointService(meshName, endpointUuid string, protocol MeshProtocol, serviceName string) error {
 	resp, err := c.httpClient.R().
 		Delete(fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s", "meshes", meshName, "endpoints", endpointUuid, "services", protocol, serviceName))
 
@@ -231,7 +245,7 @@ func (c *AgentClient) deleteEndpointService(meshName, endpointUuid string, proto
 	return nil
 }
 
-func (c *AgentClient) listEndpointPorts(meshName, endpointUuid string) ([]*MeshPort, error) {
+func (c *AgentClient) ListEndpointPorts(meshName, endpointUuid string) ([]*MeshPort, error) {
 	resp, err := c.httpClient.R().
 		SetResult([]*MeshPort{}).
 		Get(fmt.Sprintf("%s/%s/%s/%s/%s", "meshes", meshName, "endpoints", endpointUuid, "ports"))
@@ -249,7 +263,7 @@ func (c *AgentClient) listEndpointPorts(meshName, endpointUuid string) ([]*MeshP
 	return *meshPorts, nil
 }
 
-func (c *AgentClient) getEndpointPort(meshName, endpointUuid string, protocol MeshProtocol, ip string, port uint16) (*MeshPort, error) {
+func (c *AgentClient) GetEndpointPort(meshName, endpointUuid string, protocol MeshProtocol, ip string, port uint16) (*MeshPort, error) {
 	resp, err := c.httpClient.R().
 		SetResult(MeshPort{}).
 		Get(fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s/%d", "meshes", meshName, "endpoints", endpointUuid, "ports", ip, protocol, port))
@@ -267,9 +281,9 @@ func (c *AgentClient) getEndpointPort(meshName, endpointUuid string, protocol Me
 	return meshPort, nil
 }
 
-func (c *AgentClient) createEndpointPort(meshName, endpointUuid string, protocol MeshProtocol, ip string, port uint16, target MeshPortTarget) error {
+func (c *AgentClient) CreateEndpointPort(meshName, endpointUuid string, protocol MeshProtocol, ip string, port uint16, targetService string) error {
 	resp, err := c.httpClient.R().
-		SetBody(target).
+		SetBody(MeshPortTarget{Target: MeshTarget{Service: targetService}}).
 		Post(fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s/%d", "meshes", meshName, "endpoints", endpointUuid, "ports", ip, protocol, port))
 
 	if err != nil {
@@ -283,7 +297,7 @@ func (c *AgentClient) createEndpointPort(meshName, endpointUuid string, protocol
 	return nil
 }
 
-func (c *AgentClient) deleteEndpointPort(meshName, endpointUuid string, protocol MeshProtocol, ip string, port uint16) error {
+func (c *AgentClient) DeleteEndpointPort(meshName, endpointUuid string, protocol MeshProtocol, ip string, port uint16) error {
 	resp, err := c.httpClient.R().
 		Delete(fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s/%d", "meshes", meshName, "endpoints", endpointUuid, "ports", ip, protocol, port))
 

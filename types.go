@@ -12,9 +12,8 @@ const (
 )
 
 type Client struct {
-	ca             *CaClient
-	agent          *AgentClient
-	hubServerAddrs []string
+	ca    *CaClient
+	agent *AgentClient
 }
 
 type RestClient struct {
@@ -24,6 +23,7 @@ type RestClient struct {
 
 type CaClient struct {
 	*RestClient
+	hubServerAddrs []string
 }
 
 type HubClient struct {

@@ -21,18 +21,18 @@ func main() {
 	homeUserPerm, _ := loadPermit(homeZtmClient, homeUser)
 	officeUserPerm, _ := loadPermit(homeZtmClient, officeUser)
 
-	if err := homeZtmClient.Join(meshname, "cluster-home", homeUserPerm); err != nil {
+	if err := homeZtmClient.Agent().Join(meshname, "cluster-home", homeUserPerm); err != nil {
 		fmt.Println(err.Error())
 	}
 
-	if err := officeZtmClient.Join(meshname, "cluster-office", officeUserPerm); err != nil {
+	if err := officeZtmClient.Agent().Join(meshname, "cluster-office", officeUserPerm); err != nil {
 		fmt.Println(err.Error())
 	}
 
 	var homeMesh *ztm.Mesh = nil
 	var officeMesh *ztm.Mesh = nil
 
-	if meshes, err := homeZtmClient.ListMeshes(); err == nil {
+	if meshes, err := homeZtmClient.Agent().ListMeshes(); err == nil {
 		fmt.Println("ListMeshes of Home")
 		for idx, mesh := range meshes {
 			fmt.Println(idx, mesh.MeshName, mesh.Agent.ID, mesh.Agent.EndpointName, mesh.Agent.UserName)
@@ -42,7 +42,7 @@ func main() {
 		}
 	}
 
-	if meshes, err := officeZtmClient.ListMeshes(); err == nil {
+	if meshes, err := officeZtmClient.Agent().ListMeshes(); err == nil {
 		fmt.Println("ListMeshes of Office")
 		for idx, mesh := range meshes {
 			fmt.Println(idx, mesh.MeshName, mesh.Agent.ID, mesh.Agent.EndpointName, mesh.Agent.UserName)
@@ -55,7 +55,7 @@ func main() {
 	var homeEndpoint *ztm.MeshEndpoint = nil
 	var officeEndpoint *ztm.MeshEndpoint = nil
 
-	if meshEndpoints, err := homeZtmClient.ListMeshEndpoints(homeMesh.MeshName); err == nil {
+	if meshEndpoints, err := homeZtmClient.Agent().ListMeshEndpoints(homeMesh.MeshName); err == nil {
 		fmt.Println("")
 		fmt.Println("ListMeshEndpoints of home")
 		for idx, meshEndpoint := range meshEndpoints {
@@ -66,7 +66,7 @@ func main() {
 		}
 	}
 
-	if meshEndpoints, err := officeZtmClient.ListMeshEndpoints(officeMesh.MeshName); err == nil {
+	if meshEndpoints, err := officeZtmClient.Agent().ListMeshEndpoints(officeMesh.MeshName); err == nil {
 		fmt.Println("")
 		fmt.Println("ListMeshEndpoints of office")
 		for idx, meshEndpoint := range meshEndpoints {
@@ -77,19 +77,19 @@ func main() {
 		}
 	}
 
-	if err := homeZtmClient.CreateEndpointService(homeMesh.MeshName, homeEndpoint.UUID, ztm.TCP, "nginx", "127.0.0.1", 80); err != nil {
+	if err := homeZtmClient.Agent().CreateEndpointService(homeMesh.MeshName, homeEndpoint.UUID, ztm.TCP, "nginx", "127.0.0.1", 80); err != nil {
 		fmt.Println(err.Error())
 	}
 
-	if err := officeZtmClient.CreateEndpointPort(officeMesh.MeshName, officeEndpoint.UUID, ztm.TCP, "192.168.127.64", 10064, "nginx"); err != nil {
+	if err := officeZtmClient.Agent().CreateEndpointPort(officeMesh.MeshName, officeEndpoint.UUID, ztm.TCP, "192.168.127.64", 10064, "nginx"); err != nil {
 		fmt.Println(err.Error())
 	}
 
-	if err := officeZtmClient.CreateEndpointService(officeMesh.MeshName, officeEndpoint.UUID, ztm.TCP, "nginx", "127.0.0.1", 80); err != nil {
+	if err := officeZtmClient.Agent().CreateEndpointService(officeMesh.MeshName, officeEndpoint.UUID, ztm.TCP, "nginx", "127.0.0.1", 80); err != nil {
 		fmt.Println(err.Error())
 	}
 
-	if err := homeZtmClient.CreateEndpointPort(homeMesh.MeshName, homeEndpoint.UUID, ztm.TCP, "192.168.127.63", 10063, "nginx"); err != nil {
+	if err := homeZtmClient.Agent().CreateEndpointPort(homeMesh.MeshName, homeEndpoint.UUID, ztm.TCP, "192.168.127.63", 10063, "nginx"); err != nil {
 		fmt.Println(err.Error())
 	}
 }
@@ -114,8 +114,8 @@ func loadPermit(ztmClient *ztm.Client, user string) (*ztm.Permit, error) {
 		return perm, nil
 	}
 
-	ztmClient.Evict(user)
-	permit, apiErr := ztmClient.Invite(user)
+	ztmClient.Ca().Evict(user)
+	permit, apiErr := ztmClient.Ca().Invite(user)
 	if apiErr != nil {
 		return nil, apiErr
 	}
