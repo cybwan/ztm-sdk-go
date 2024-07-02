@@ -12,14 +12,15 @@ import (
 func main() {
 	meshname := `k8s`
 
-	homeUser := `fsm-home`
-	officeUser := `fsm-office`
+	fsmUser := `fsm`
+	//homeUser := `fsm-home`
+	//officeUser := `fsm-office`
 
-	homeZtmClient := ztm.NewClient(`192.168.226.61:9999`, `192.168.226.63:7777`, `192.168.226.62:8888`)
-	officeZtmClient := ztm.NewClient(`192.168.226.61:9999`, `192.168.226.64:7777`, `192.168.226.62:8888`)
+	homeZtmClient := ztm.NewClient(`192.168.226.62:9999`, `192.168.226.63:7777`, `192.168.226.62:8888`)
+	officeZtmClient := ztm.NewClient(`192.168.226.62:9999`, `192.168.226.64:7777`, `192.168.226.62:8888`)
 
-	homeUserPerm, _ := loadPermit(homeZtmClient, homeUser)
-	officeUserPerm, _ := loadPermit(homeZtmClient, officeUser)
+	homeUserPerm, _ := loadPermit(homeZtmClient, fsmUser)
+	officeUserPerm, _ := loadPermit(homeZtmClient, fsmUser)
 
 	if err := homeZtmClient.Agent().Join(meshname, "cluster-home", homeUserPerm); err != nil {
 		fmt.Println(err.Error())
@@ -77,19 +78,19 @@ func main() {
 		}
 	}
 
-	if err := homeZtmClient.Agent().CreateEndpointService(homeMesh.MeshName, homeEndpoint.UUID, ztm.TCP, "nginx", "127.0.0.1", 80); err != nil {
+	if err := homeZtmClient.Agent().CreateEndpointService(homeMesh.MeshName, homeEndpoint.UUID, ztm.TCP, "nginx.default.svc.cluster.local", "127.0.0.1", 80); err != nil {
 		fmt.Println(err.Error())
 	}
 
-	if err := officeZtmClient.Agent().CreateEndpointPort(officeMesh.MeshName, officeEndpoint.UUID, ztm.TCP, "192.168.127.64", 10064, "nginx"); err != nil {
+	if err := officeZtmClient.Agent().CreateEndpointPort(officeMesh.MeshName, officeEndpoint.UUID, ztm.TCP, "192.168.127.64", 10064, "nginx.default.svc.cluster.local"); err != nil {
 		fmt.Println(err.Error())
 	}
 
-	if err := officeZtmClient.Agent().CreateEndpointService(officeMesh.MeshName, officeEndpoint.UUID, ztm.TCP, "nginx", "127.0.0.1", 80); err != nil {
+	if err := officeZtmClient.Agent().CreateEndpointService(officeMesh.MeshName, officeEndpoint.UUID, ztm.TCP, "nginx.default.svc.cluster.local", "127.0.0.1", 80); err != nil {
 		fmt.Println(err.Error())
 	}
 
-	if err := homeZtmClient.Agent().CreateEndpointPort(homeMesh.MeshName, homeEndpoint.UUID, ztm.TCP, "192.168.127.63", 10063, "nginx"); err != nil {
+	if err := homeZtmClient.Agent().CreateEndpointPort(homeMesh.MeshName, homeEndpoint.UUID, ztm.TCP, "192.168.127.63", 10063, "nginx.default.svc.cluster.local"); err != nil {
 		fmt.Println(err.Error())
 	}
 }
