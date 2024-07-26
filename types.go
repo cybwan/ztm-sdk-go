@@ -11,19 +11,9 @@ const (
 	defaultHTTPSchema = "http"
 )
 
-type Client struct {
-	ca    *CaClient
-	agent *AgentClient
-}
-
 type RestClient struct {
 	defaultTransport *http.Transport
 	httpClient       *resty.Client
-}
-
-type CaClient struct {
-	*RestClient
-	hubServerAddrs []string
 }
 
 type HubClient struct {
@@ -32,6 +22,12 @@ type HubClient struct {
 
 type AgentClient struct {
 	*RestClient
+	*MeshesClient
+	*EndpointClient
+	*AppClient
+	*OutboundClient
+	*InboundClient
+	*FileClient
 }
 
 type Permit struct {
@@ -58,8 +54,8 @@ type Mesh struct {
 	Connected  bool     `json:"connected,omitempty"`
 }
 
-type MeshEndpoint struct {
-	IsLocal   bool     `json:"isLocal,omitempty"`
+type Endpoint struct {
+	Local     bool     `json:"isLocal,omitempty"`
 	UUID      string   `json:"id,omitempty"`
 	Name      string   `json:"name,omitempty"`
 	UserName  string   `json:"username,omitempty"`
@@ -71,40 +67,47 @@ type MeshEndpoint struct {
 	Online    bool     `json:"online,omitempty"`
 }
 
-type MeshService struct {
-	Name         string         `json:"name,omitempty"`
-	Protocol     MeshProtocol   `json:"protocol,omitempty"`
-	Endpoints    []MeshEndpoint `json:"endpoints,omitempty"`
-	Users        []string       `json:"users,omitempty"`
-	IsDiscovered bool           `json:"isDiscovered,omitempty"`
-	IsLocal      bool           `json:"isLocal,omitempty"`
-	Host         string         `json:"host,omitempty"`
-	Port         uint16         `json:"port,omitempty"`
+type App struct {
+	Provider   string `json:"provider"`
+	Name       string `json:"name"`
+	Tag        string `json:"tag,omitempty"`
+	Builtin    bool   `json:"isBuiltin"`
+	Downloaded bool   `json:"isDownloaded"`
+	Published  bool   `json:"isPublished"`
+	Running    bool   `json:"isRunning"`
 }
 
-type MeshServerAddr struct {
-	Host string `json:"host,omitempty"`
-	Port uint16 `json:"port,omitempty"`
+type File struct {
+	Name    string   `json:"name"`
+	Size    uint32   `json:"size"`
+	Time    uint64   `json:"time"`
+	Hash    string   `json:"hash"`
+	Sources []string `json:"sources,omitempty"`
 }
 
-type MeshListen struct {
-	IP   string `json:"ip,omitempty"`
-	Port uint16 `json:"port,omitempty"`
+type Target struct {
+	Host string `json:"host"`
+	Port uint16 `json:"port"`
 }
 
-type MeshTarget struct {
-	Service string `json:"service,omitempty"`
+type Outbound struct {
+	Name      string       `json:"name,omitempty"`
+	Protocol  MeshProtocol `json:"protocol,omitempty"`
+	Targets   []Target     `json:"targets,omitempty"`
+	Entrances []string     `json:"entrances,omitempty"`
 }
 
-type MeshPort struct {
+type Listen struct {
+	IP   string `json:"ip"`
+	Port uint16 `json:"port"`
+	Open bool   `json:"open"`
+}
+
+type Inbound struct {
+	Name     string       `json:"name,omitempty"`
 	Protocol MeshProtocol `json:"protocol,omitempty"`
-	Listen   MeshListen   `json:"listen,omitempty"`
-	Target   MeshTarget   `json:"target,omitempty"`
-	Open     bool         `json:"open,omitempty"`
-}
-
-type MeshPortTarget struct {
-	Target MeshTarget `json:"target,omitempty"`
+	Listens  []Listen     `json:"listens,omitempty"`
+	Exits    []string     `json:"exits,omitempty"`
 }
 
 type Log struct {
