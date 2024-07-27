@@ -18,13 +18,19 @@ ztm run agent -l 0.0.0.0:7772 -d /tmp/.ztm.office
 
 #### 4 测试
 
-```bash
+##### 4.1 组网
+
+```
 CTR_AGENT=home make TestJoin
 CTR_AGENT=home make TestListEndpoints
 
 CTR_AGENT=office make TestJoin
 CTR_AGENT=office make TestListEndpoints
+```
 
+##### 4.2 ztm/tunnel 测试
+
+```bash
 CTR_AGENT=home make TestStartApp
 CTR_AGENT=office make TestStartApp
 
@@ -36,5 +42,22 @@ CTR_AGENT=office MY_HOST_IP=${MY_HOST_IP} make TestOpenInbound
 
 curl ${MY_HOST_IP}:10081 -I
 curl ${MY_HOST_IP}:10082 -I
+```
+
+##### 4.3 file 测试
+
+```bash
+CTR_AGENT=home make TestPublishFile
+
+CTR_AGENT=home make TestDescribeFile
+CTR_AGENT=office make TestDescribeFile
+
+CTR_AGENT=office make TestDownloadFile
+
+CTR_AGENT=home make TestEraseFile
+CTR_AGENT=office make TestEraseFile
+
+CTR_AGENT=home make TestListFiles
+CTR_AGENT=office make TestListFiles
 ```
 

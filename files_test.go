@@ -44,6 +44,7 @@ func TestEraseFile(t *testing.T) {
 	client := FileClient{
 		RestClient: NewRestClient(currCtx.agentAddr),
 	}
+	client.httpClient.Debug = true
 	err := client.EraseFile(currCtx.meshName, "/home/root/xxx")
 	fmt.Println(err)
 }
