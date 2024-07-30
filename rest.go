@@ -9,7 +9,7 @@ import (
 )
 
 // NewRestClient creates a Rest Client
-func NewRestClient(serverAddr string) *RestClient {
+func NewRestClient(serverAddr string, debug bool) *RestClient {
 	return NewRestClientWithTransport(
 		serverAddr,
 		&http.Transport{
@@ -17,11 +17,12 @@ func NewRestClient(serverAddr string) *RestClient {
 			MaxIdleConns:       100,
 			IdleConnTimeout:    60 * time.Second,
 			DisableCompression: false,
-		})
+		},
+		debug)
 }
 
 // NewRestClientWithTransport creates a Rest Client with Transport
-func NewRestClientWithTransport(serverAddr string, transport *http.Transport) *RestClient {
+func NewRestClientWithTransport(serverAddr string, transport *http.Transport, debug bool) *RestClient {
 	client := &RestClient{
 		defaultTransport: transport,
 	}
@@ -32,7 +33,7 @@ func NewRestClientWithTransport(serverAddr string, transport *http.Transport) *R
 		SetAllowGetMethodPayload(false).
 		SetBaseURL(fmt.Sprintf(`%s://%s/%s`, defaultHTTPSchema, serverAddr, apiURI)).
 		SetTimeout(30 * time.Second).
-		SetDebug(false).
+		SetDebug(debug).
 		EnableTrace()
 
 	return client

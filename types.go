@@ -21,7 +21,6 @@ type HubClient struct {
 }
 
 type AgentClient struct {
-	*RestClient
 	*MeshesClient
 	*EndpointClient
 	*AppClient

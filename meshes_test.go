@@ -8,7 +8,7 @@ import (
 
 func TestJoin(t *testing.T) {
 	client := MeshesClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 
 	permit, err := LoadPermit("/tmp/root.json")
@@ -24,7 +24,7 @@ func TestJoin(t *testing.T) {
 
 func TestListMeshes(t *testing.T) {
 	client := MeshesClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	meshes, _ := client.ListMeshes()
 	bytes, _ := json.Marshal(meshes)
@@ -33,7 +33,7 @@ func TestListMeshes(t *testing.T) {
 
 func TestGetMesh(t *testing.T) {
 	client := MeshesClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	mesh, _ := client.GetMesh(currCtx.meshName)
 	bytes, _ := json.Marshal(mesh)
@@ -42,7 +42,7 @@ func TestGetMesh(t *testing.T) {
 
 func TestLeave(t *testing.T) {
 	client := MeshesClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 
 	err := client.Leave(currCtx.meshName)

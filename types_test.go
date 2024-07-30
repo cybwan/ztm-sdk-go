@@ -33,7 +33,7 @@ type ZtmContext struct {
 
 func (c *ZtmContext) LocalEndpointId() string {
 	client := EndpointClient{
-		RestClient: NewRestClient(c.agentAddr),
+		RestClient: NewRestClient(c.agentAddr, false),
 	}
 
 	if localEndpoint, err := client.LocalEndpoint(c.meshName); err == nil {

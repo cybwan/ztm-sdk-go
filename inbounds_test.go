@@ -8,7 +8,7 @@ import (
 
 func TestListInbounds(t *testing.T) {
 	client := InboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	outbounds, _ := client.ListInbounds(currCtx.meshName, currCtx.LocalEndpointId(), "ztm", "tunnel")
 	bytes, _ := json.MarshalIndent(outbounds, "", " ")
@@ -17,7 +17,7 @@ func TestListInbounds(t *testing.T) {
 
 func TestDescribeInbound(t *testing.T) {
 	client := InboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	inbound, _ := client.DescribeInbound(currCtx.meshName, currCtx.LocalEndpointId(), "ztm", "tunnel", TCP, "httpbin")
 	bytes, _ := json.MarshalIndent(inbound, "", " ")
@@ -26,7 +26,7 @@ func TestDescribeInbound(t *testing.T) {
 
 func TestOpenInbound(t *testing.T) {
 	client := InboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	err := client.OpenInbound(currCtx.meshName, currCtx.LocalEndpointId(), "ztm", "tunnel", TCP, "httpbin", []Listen{
 		{
@@ -45,7 +45,7 @@ func TestOpenInbound(t *testing.T) {
 
 func TestCloseInbound(t *testing.T) {
 	client := InboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	err := client.CloseInbound(currCtx.meshName, currCtx.LocalEndpointId(), "ztm", "tunnel", TCP, "httpbin")
 	if err != nil {
