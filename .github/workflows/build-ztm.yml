@@ -51,9 +51,7 @@ jobs:
         with:
           images: ${{ secrets.RELEASE_REGISTRY }}/ztm-${{ matrix.id }}
           tags: |
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}.{{minor}}.{{patch}}
-            type=sha,format=short
+            type=raw,${{ inputs.tag }}
           flavor: |
             latest=auto
 
