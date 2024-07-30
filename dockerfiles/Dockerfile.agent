@@ -1,0 +1,44 @@
+# syntax=docker/dockerfile:1.3
+
+# Builder stage
+FROM debian:12-slim AS builder
+
+RUN apt update && \
+  apt install -y git clang cmake npm && \
+  apt purge --auto-remove && \
+  apt clean && \
+  rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/flomesh-io/ztm.git; cd ztm; ./build.sh
+
+# Final stage (base image for both hub and agent)
+FROM debian:12-slim
+
+# Set environment variables
+ENV ZTM_NAMES=${ZTM_NAMES:-0.0.0.0}
+ENV ZTM_PORT=${ZTM_PORT:-8888}
+
+WORKDIR /home/ztm
+
+# Create user and setup environment
+RUN useradd -m -d /home/ztm ztm && \
+    mkdir -p /etc/ztm /permit && \
+    chown -R ztm:ztm /home/ztm /etc/ztm /permit
+
+COPY --from=builder /ztm/bin/ztm /usr/local/bin/ztm
+
+# Expose the required port
+EXPOSE ${ZTM_PORT}
+
+# Copy entrypoint script and set permissions
+COPY scripts/ztm-hub-entrypoint.sh /usr/local/bin/ztm-hub-entrypoint.sh
+RUN chmod +x /usr/local/bin/ztm-hub-entrypoint.sh
+
+# Change ownership to ztm user
+RUN chown ztm:ztm /usr/local/bin/ztm-hub-entrypoint.sh
+
+# Switch to ztm user
+USER ztm
+
+# Entrypoint to start the services
+ENTRYPOINT ["/usr/local/bin/ztm-hub-entrypoint.sh"]
