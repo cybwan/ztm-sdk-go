@@ -15,8 +15,11 @@ RUN git clone https://github.com/flomesh-io/ztm.git; cd ztm; ./build.sh
 FROM debian:12-slim
 
 # Set environment variables
-ENV ZTM_NAMES=${ZTM_NAMES:-0.0.0.0}
-ENV ZTM_PORT=${ZTM_PORT:-8888}
+ENV ZTM_JOIN_MESH=${ZTM_JOIN_MESH}
+ENV ZTM_ENDPOINT=${ZTM_ENDPOINT}
+
+ENV ZTM_PORT=${ZTM_PORT:-7777}
+ENV ZTM_PERMIT=${ZTM_PERMIT:-/permit}
 
 WORKDIR /home/ztm
 
@@ -31,14 +34,14 @@ COPY --from=builder /ztm/bin/ztm /usr/local/bin/ztm
 EXPOSE ${ZTM_PORT}
 
 # Copy entrypoint script and set permissions
-COPY scripts/ztm-hub-entrypoint.sh /usr/local/bin/ztm-hub-entrypoint.sh
-RUN chmod +x /usr/local/bin/ztm-hub-entrypoint.sh
+COPY scripts/ztm-hub-entrypoint.sh /usr/local/bin/ztm-agent-entrypoint.sh
+RUN chmod +x /usr/local/bin/ztm-agent-entrypoint.sh
 
 # Change ownership to ztm user
-RUN chown ztm:ztm /usr/local/bin/ztm-hub-entrypoint.sh
+RUN chown ztm:ztm /usr/local/bin/ztm-agent-entrypoint.sh
 
 # Switch to ztm user
 USER ztm
 
 # Entrypoint to start the services
-ENTRYPOINT ["/usr/local/bin/ztm-hub-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/ztm-agent-entrypoint.sh"]
