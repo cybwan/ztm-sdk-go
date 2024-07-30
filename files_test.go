@@ -8,7 +8,7 @@ import (
 
 func TestListFiles(t *testing.T) {
 	client := FileClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	files, _ := client.ListFiles(currCtx.meshName)
 	bytes, _ := json.MarshalIndent(files, "", " ")
@@ -17,7 +17,7 @@ func TestListFiles(t *testing.T) {
 
 func TestPublishFile(t *testing.T) {
 	client := FileClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	content := client.PublishFile(currCtx.meshName, "/home/root/xxx", []byte("demo"))
 	fmt.Println(content)
@@ -25,7 +25,7 @@ func TestPublishFile(t *testing.T) {
 
 func TestDescribeFile(t *testing.T) {
 	client := FileClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	file, _ := client.DescribeFile(currCtx.meshName, "/home/root/xxx")
 	bytes, _ := json.MarshalIndent(file, "", " ")
@@ -34,7 +34,7 @@ func TestDescribeFile(t *testing.T) {
 
 func TestDownloadFile(t *testing.T) {
 	client := FileClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	content, _ := client.DownloadFile(currCtx.meshName, "/home/root/xxx")
 	fmt.Println(content)
@@ -42,7 +42,7 @@ func TestDownloadFile(t *testing.T) {
 
 func TestEraseFile(t *testing.T) {
 	client := FileClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	client.httpClient.Debug = true
 	err := client.EraseFile(currCtx.meshName, "/home/root/xxx")

@@ -8,7 +8,7 @@ import (
 
 func TestListEndpoints(t *testing.T) {
 	client := EndpointClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	endpoints, _ := client.ListEndpoints(currCtx.meshName)
 	bytes, _ := json.MarshalIndent(endpoints, "", " ")
@@ -17,7 +17,7 @@ func TestListEndpoints(t *testing.T) {
 
 func TestGetEndpoint(t *testing.T) {
 	client := EndpointClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	endpoint, _ := client.GetEndpoint(currCtx.meshName, currCtx.LocalEndpointId())
 	bytes, _ := json.MarshalIndent(endpoint, "", " ")
@@ -26,7 +26,7 @@ func TestGetEndpoint(t *testing.T) {
 
 func TestEndpointLogs(t *testing.T) {
 	client := EndpointClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	logs, _ := client.GetEndpointLogs(currCtx.meshName, currCtx.LocalEndpointId())
 	bytes, _ := json.MarshalIndent(logs, "", " ")

@@ -8,7 +8,7 @@ import (
 
 func TestListApps(t *testing.T) {
 	client := AppClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	apps, _ := client.ListApps(currCtx.meshName, currCtx.LocalEndpointId())
 	bytes, _ := json.MarshalIndent(apps, "", " ")
@@ -17,7 +17,7 @@ func TestListApps(t *testing.T) {
 
 func TestGetApp(t *testing.T) {
 	client := AppClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	app, _ := client.GetApp(currCtx.meshName, currCtx.LocalEndpointId(), "ztm", "tunnel", "")
 	bytes, _ := json.MarshalIndent(app, "", " ")
@@ -26,7 +26,7 @@ func TestGetApp(t *testing.T) {
 
 func TestStartApp(t *testing.T) {
 	client := AppClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	_, err := client.StartApp(currCtx.meshName, currCtx.LocalEndpointId(), "ztm", "tunnel", "")
 	if err != nil {
@@ -36,7 +36,7 @@ func TestStartApp(t *testing.T) {
 
 func TestStopApp(t *testing.T) {
 	client := AppClient{
-		RestClient: NewRestClient(currCtx.agentAddr),
+		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 	_, err := client.StopApp(currCtx.meshName, currCtx.LocalEndpointId(), "ztm", "tunnel", "")
 	if err != nil {
