@@ -1,4 +1,4 @@
-module github.com/cybwan/ztm-go-sdk
+module github.com/cybwan/ztm-sdk-go
 
 go 1.22.3
 
