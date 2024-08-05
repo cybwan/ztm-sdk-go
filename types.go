@@ -11,8 +11,6 @@ const (
 	defaultHTTPSchema = "http"
 
 	ZTM = "ztm"
-
-	APP_TUNNEL = "tunnel"
 )
 
 type RestClient struct {

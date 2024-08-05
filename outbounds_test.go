@@ -28,7 +28,7 @@ func TestOpenOutbound(t *testing.T) {
 	client := OutboundClient{
 		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
-	err := client.OpenOutbound(currCtx.meshName, currCtx.LocalEndpointId(), ZTM, APP_TUNNEL, TCP, APP_TUNNEL, []Target{
+	err := client.OpenOutbound(currCtx.meshName, currCtx.LocalEndpointId(), ZTM, APP_TUNNEL, TCP, "httpbin", []Target{
 		{
 			Host: "44.207.203.25",
 			Port: 80,

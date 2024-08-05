@@ -21,6 +21,8 @@ var (
 	}
 
 	currCtx *ZtmContext
+
+	APP_TUNNEL = "tunnel"
 )
 
 type ZtmContext struct {

@@ -1,19 +1,19 @@
 #### 1 部署 ZTM HUB 服务
 
 ```bash
-ztm run hub -l 0.0.0.0:8888 -n 127.0.0.1:8888 -d /tmp/.ztm.hub --permit /tmp/root.json
+ztm run hub -l 0.0.0.0:8888 -n 127.0.0.1:8888 -d /tmp/.ztm.hub --permit /tmp/.ztm.root.json
 ```
 
 #### 2 部署 ZTM Home Agent 服务
 
 ```bash
-ztm run agent -l 0.0.0.0:7771 -d /tmp/.ztm.home --permit /tmp/root.json --join k8s-mesh --join-as home
+ztm run agent -l 0.0.0.0:7771 -d /tmp/.ztm.home --permit /tmp/.ztm.root.json --join k8s-mesh --join-as home
 ```
 
 #### 3 部署 ZTM Office Agent 服务
 
 ```bash
-ztm run agent -l 0.0.0.0:7772 -d /tmp/.ztm.office --permit /tmp/root.json --join k8s-mesh --join-as office
+ztm run agent -l 0.0.0.0:7772 -d /tmp/.ztm.office --permit /tmp/.ztm.root.json --join k8s-mesh --join-as office
 ```
 
 #### 4 测试

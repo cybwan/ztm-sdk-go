@@ -11,7 +11,7 @@ func TestJoin(t *testing.T) {
 		RestClient: NewRestClient(currCtx.agentAddr, false),
 	}
 
-	permit, err := LoadPermit("/tmp/root.json")
+	permit, err := LoadPermit("/tmp/.ztm.root.json")
 	if err != nil {
 		t.Error(err)
 	}
