@@ -8,27 +8,27 @@ import (
 
 func TestListOutbounds(t *testing.T) {
 	client := OutboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr, false),
+		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	outbounds, _ := client.ListOutbounds(currCtx.meshName, currCtx.LocalEndpointId(), ZTM, APP_TUNNEL)
+	outbounds, _ := client.ListOutbounds(CurrCtx.meshName, CurrCtx.LocalEndpointId(), ZTM, AppTunnel)
 	bytes, _ := json.MarshalIndent(outbounds, "", " ")
 	fmt.Println(string(bytes))
 }
 
 func TestDescribeOutbound(t *testing.T) {
 	client := OutboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr, false),
+		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	outbound, _ := client.DescribeOutbound(currCtx.meshName, currCtx.LocalEndpointId(), ZTM, APP_TUNNEL, TCP, "httpbin")
+	outbound, _ := client.DescribeOutbound(CurrCtx.meshName, CurrCtx.LocalEndpointId(), ZTM, AppTunnel, TCP, "httpbin")
 	bytes, _ := json.MarshalIndent(outbound, "", " ")
 	fmt.Println(string(bytes))
 }
 
 func TestOpenOutbound(t *testing.T) {
 	client := OutboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr, false),
+		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	err := client.OpenOutbound(currCtx.meshName, currCtx.LocalEndpointId(), ZTM, APP_TUNNEL, TCP, "httpbin", []Target{
+	err := client.OpenOutbound(CurrCtx.meshName, CurrCtx.LocalEndpointId(), ZTM, AppTunnel, TCP, "httpbin", []Target{
 		{
 			Host: "44.207.203.25",
 			Port: 80,
@@ -45,9 +45,9 @@ func TestOpenOutbound(t *testing.T) {
 
 func TestCloseOutbound(t *testing.T) {
 	client := OutboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr, false),
+		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	err := client.CloseOutbound(currCtx.meshName, currCtx.LocalEndpointId(), ZTM, APP_TUNNEL, TCP, "httpbin")
+	err := client.CloseOutbound(CurrCtx.meshName, CurrCtx.LocalEndpointId(), ZTM, AppTunnel, TCP, "httpbin")
 	if err != nil {
 		t.Error(err)
 	}

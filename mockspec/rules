@@ -1,0 +1,6 @@
+# This file specifies the rules used to generate mock files for interfaces defined in
+# packages for the purpose of unit testing. The rules are to be specified of the form:
+# package name; mock output file path; package import path; interfaces to mock
+
+# local
+local; local/mock_generated.go; github.com/cybwan/ztm-sdk-go/local; ZtmLocalSpec
