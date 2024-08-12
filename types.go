@@ -10,7 +10,8 @@ const (
 	apiURI            = "api"
 	defaultHTTPSchema = "http"
 
-	ZTM = "ztm"
+	ZTM        = "ztm"
+	BaseFolder = "/users"
 )
 
 type RestClient struct {

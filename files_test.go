@@ -6,6 +6,11 @@ import (
 	"testing"
 )
 
+var (
+	user = "root"
+	file = "xxx"
+)
+
 func TestListFiles(t *testing.T) {
 	client := FileClient{
 		RestClient: NewRestClient(CurrCtx.agentAddr, false),
@@ -19,7 +24,7 @@ func TestPublishFile(t *testing.T) {
 	client := FileClient{
 		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	content := client.PublishFile(CurrCtx.meshName, "/users/root/xxx", []byte("demo"))
+	content := client.PublishFile(CurrCtx.meshName, fmt.Sprintf("%s/%s/%s", BaseFolder, user, file), []byte("demo"))
 	fmt.Println(content)
 }
 
@@ -27,7 +32,7 @@ func TestDescribeFile(t *testing.T) {
 	client := FileClient{
 		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	file, _ := client.DescribeFile(CurrCtx.meshName, "/users/root/xxx")
+	file, _ := client.DescribeFile(CurrCtx.meshName, fmt.Sprintf("%s/%s/%s", BaseFolder, user, file))
 	bytes, _ := json.MarshalIndent(file, "", " ")
 	fmt.Println(string(bytes))
 }
@@ -36,7 +41,7 @@ func TestDownloadFile(t *testing.T) {
 	client := FileClient{
 		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	content, _ := client.DownloadFile(CurrCtx.meshName, "/users/root/xxx")
+	content, _ := client.DownloadFile(CurrCtx.meshName, fmt.Sprintf("%s/%s/%s", BaseFolder, user, file))
 	fmt.Println(content)
 }
 
@@ -45,6 +50,6 @@ func TestEraseFile(t *testing.T) {
 		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
 	client.httpClient.Debug = true
-	err := client.EraseFile(CurrCtx.meshName, "/users/root/xxx")
+	err := client.EraseFile(CurrCtx.meshName, fmt.Sprintf("%s/%s/%s", BaseFolder, user, file))
 	fmt.Println(err)
 }
