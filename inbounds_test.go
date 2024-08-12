@@ -8,33 +8,33 @@ import (
 
 func TestListInbounds(t *testing.T) {
 	client := InboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr, false),
+		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	outbounds, _ := client.ListInbounds(currCtx.meshName, currCtx.LocalEndpointId(), ZTM, APP_TUNNEL)
+	outbounds, _ := client.ListInbounds(CurrCtx.meshName, CurrCtx.LocalEndpointId(), ZTM, AppTunnel)
 	bytes, _ := json.MarshalIndent(outbounds, "", " ")
 	fmt.Println(string(bytes))
 }
 
 func TestDescribeInbound(t *testing.T) {
 	client := InboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr, false),
+		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	inbound, _ := client.DescribeInbound(currCtx.meshName, currCtx.LocalEndpointId(), ZTM, APP_TUNNEL, TCP, "httpbin")
+	inbound, _ := client.DescribeInbound(CurrCtx.meshName, CurrCtx.LocalEndpointId(), ZTM, AppTunnel, TCP, "httpbin")
 	bytes, _ := json.MarshalIndent(inbound, "", " ")
 	fmt.Println(string(bytes))
 }
 
 func TestOpenInbound(t *testing.T) {
 	client := InboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr, false),
+		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	err := client.OpenInbound(currCtx.meshName, currCtx.LocalEndpointId(), ZTM, APP_TUNNEL, TCP, "httpbin", []Listen{
+	err := client.OpenInbound(CurrCtx.meshName, CurrCtx.LocalEndpointId(), ZTM, AppTunnel, TCP, "httpbin", []Listen{
 		{
-			IP:   currCtx.hostIP,
+			IP:   CurrCtx.hostIP,
 			Port: 10081,
 		},
 		{
-			IP:   currCtx.hostIP,
+			IP:   CurrCtx.hostIP,
 			Port: 10082,
 		},
 	})
@@ -45,9 +45,9 @@ func TestOpenInbound(t *testing.T) {
 
 func TestCloseInbound(t *testing.T) {
 	client := InboundClient{
-		RestClient: NewRestClient(currCtx.agentAddr, false),
+		RestClient: NewRestClient(CurrCtx.agentAddr, false),
 	}
-	err := client.CloseInbound(currCtx.meshName, currCtx.LocalEndpointId(), ZTM, APP_TUNNEL, TCP, "httpbin")
+	err := client.CloseInbound(CurrCtx.meshName, CurrCtx.LocalEndpointId(), ZTM, AppTunnel, TCP, "httpbin")
 	if err != nil {
 		t.Error(err)
 	}

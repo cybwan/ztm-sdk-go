@@ -7,7 +7,7 @@ import (
 )
 
 func TestAgent(t *testing.T) {
-	client := NewAgentClient(currCtx.agentAddr, false)
+	client := NewAgentClient(CurrCtx.agentAddr, false)
 	meshes, _ := client.ListMeshes()
 	bytes, _ := json.Marshal(meshes)
 	fmt.Println(string(bytes))

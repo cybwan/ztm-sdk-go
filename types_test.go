@@ -6,21 +6,23 @@ import (
 )
 
 var (
-	homeCtx = &ZtmContext{
+	HomeCtx = &ZtmContext{
 		user:         "root",
 		agentAddr:    "127.0.0.1:7771",
 		meshName:     "k8s-mesh",
 		endpointName: "home",
 	}
 
-	officeCtx = &ZtmContext{
+	OfficeCtx = &ZtmContext{
 		user:         "root",
 		agentAddr:    "127.0.0.1:7772",
 		meshName:     "k8s-mesh",
 		endpointName: "office",
 	}
 
-	currCtx *ZtmContext
+	CurrCtx *ZtmContext
+
+	AppTunnel = "tunnel"
 )
 
 type ZtmContext struct {
@@ -46,14 +48,14 @@ func (c *ZtmContext) LocalEndpointId() string {
 func init() {
 	agent := os.Getenv("CTR_AGENT")
 	if strings.EqualFold(agent, "office") {
-		currCtx = officeCtx
+		CurrCtx = OfficeCtx
 	} else {
-		currCtx = homeCtx
+		CurrCtx = HomeCtx
 	}
 
 	hostIP := os.Getenv("MY_HOST_IP")
 	if len(hostIP) == 0 {
 		hostIP = "127.0.0.1"
 	}
-	currCtx.hostIP = hostIP
+	CurrCtx.hostIP = hostIP
 }

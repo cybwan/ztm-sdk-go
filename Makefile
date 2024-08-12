@@ -3,6 +3,11 @@
 CTR_AGENT ?= home
 MY_HOST_IP ?= 127.0.0.1
 
+.PHONY: check-mocks
+check-mocks:
+	@go run ./mockspec/generate.go
+	@git diff --exit-code || { echo "----- Please commit the changes made by 'go run ./mockspec/generate.go' -----"; exit 1; }
+
 .PHONY: go-test
 go-test:
 	go test -v ./...; echo $?
